@@ -187,10 +187,19 @@ KeyEvent CreateCharEvent(const std::string& unmodified_text,
                   ui::VKEY_UNKNOWN);
 }
 
+void DoBestEffortConversion(const base::string16 keysSubstring,
+                            std::string* unmodified_text,
+                            std::string* modified_text) {
+  // Do a best effort using raw key we were given.
+  unmodified_text->assign(base::UTF16ToUTF8(keysSubstring));
+  modified_text->assign(base::UTF16ToUTF8(keysSubstring));
+}
+
 Status ConvertKeysToKeyEvents(const base::string16& client_keys,
                               bool release_modifiers,
                               int* modifiers,
-                              std::list<KeyEvent>* client_key_events) {
+                              std::list<KeyEvent>* client_key_events,
+                              bool is_android) {
   std::list<KeyEvent> key_events;
 
   base::string16 keys = client_keys;
@@ -254,15 +263,18 @@ Status ConvertKeysToKeyEvents(const base::string16& client_keys,
     bool should_skip = false;
     bool is_special_key = KeyCodeFromSpecialWebDriverKey(key, &key_code);
     std::string error_msg;
-    if (is_special_key ||
+    if (is_android) {
+      DoBestEffortConversion(keys.substr(i,1),
+                             &unmodified_text,
+                             &modified_text);
+    } else if (is_special_key ||
         KeyCodeFromShorthandKey(key, &key_code, &should_skip)) {
       if (should_skip)
         continue;
       if (key_code == ui::VKEY_UNKNOWN) {
         return Status(kUnknownError, base::StringPrintf(
             "unknown WebDriver key(%d) at string index (%" PRIuS ")",
-            static_cast<int>(key),
-            i));
+            static_cast<int>(key), i));
       }
       if (key_code == ui::VKEY_RETURN) {
         // For some reason Chrome expects a carriage return for the return key.
@@ -303,9 +315,9 @@ Status ConvertKeysToKeyEvents(const base::string16& client_keys,
           modified_text.clear();
         }
       } else {
-        // Do a best effort and use the raw key we were given.
-        unmodified_text = base::UTF16ToUTF8(keys.substr(i, 1));
-        modified_text = base::UTF16ToUTF8(keys.substr(i, 1));
+        DoBestEffortConversion(keys.substr(i,1),
+                               &unmodified_text,
+                               &modified_text);
       }
     }
 

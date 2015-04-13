@@ -58,7 +58,8 @@ Status SendKeysOnWindow(
     WebView* web_view,
     const base::ListValue* key_list,
     bool release_modifiers,
-    int* sticky_modifiers) {
+    int* sticky_modifiers,
+    bool is_android) {
   base::string16 keys;
   Status status = FlattenStringArray(key_list, &keys);
   if (status.IsError())
@@ -66,7 +67,7 @@ Status SendKeysOnWindow(
   std::list<KeyEvent> events;
   int sticky_modifiers_tmp = *sticky_modifiers;
   status = ConvertKeysToKeyEvents(
-      keys, release_modifiers, &sticky_modifiers_tmp, &events);
+      keys, release_modifiers, &sticky_modifiers_tmp, &events, is_android);
   if (status.IsError())
     return status;
   status = web_view->DispatchKeyEvents(events);

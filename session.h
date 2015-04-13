@@ -38,12 +38,16 @@ struct FrameInfo {
   std::string chromedriver_frame_id;
 };
 
-struct Session {
+class Session {
+public:
   static const base::TimeDelta kDefaultPageLoadTimeout;
 
   explicit Session(const std::string& id);
   Session(const std::string& id, scoped_ptr<Chrome> chrome);
   ~Session();
+
+  bool IsAndroid() const;
+  void SetIsAndroid(bool is_android);
 
   Status GetTargetWindow(WebView** web_view);
 
@@ -85,6 +89,9 @@ struct Session {
   // |CommandListener|s might be |CommandListenerProxy|s that forward to
   // |DevToolsEventListener|s owned by |chrome|.
   ScopedVector<CommandListener> command_listeners;
+
+private:
+  bool is_android_;
 };
 
 Session* GetThreadLocalSession();

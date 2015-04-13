@@ -610,7 +610,7 @@ Status ExecuteSendKeysToActiveElement(
   if (!params.GetList("value", &key_list))
     return Status(kUnknownError, "'value' must be a list");
   return SendKeysOnWindow(
-      web_view, key_list, false, &session->sticky_modifiers);
+      web_view, key_list, false, &session->sticky_modifiers, session->IsAndroid());
 }
 
 Status ExecuteGetAppCacheStatus(

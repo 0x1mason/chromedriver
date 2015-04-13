@@ -73,7 +73,7 @@ Status SendKeysToElement(
       return status;
   }
 
-  return SendKeysOnWindow(web_view, key_list, true, &session->sticky_modifiers);
+  return SendKeysOnWindow(web_view, key_list, true, &session->sticky_modifiers, session->IsAndroid());
 }
 
 }  // namespace

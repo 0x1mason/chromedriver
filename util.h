@@ -24,7 +24,8 @@ Status SendKeysOnWindow(
     WebView* web_view,
     const base::ListValue* key_list,
     bool release_modifiers,
-    int* sticky_modifiers);
+    int* sticky_modifiers,
+    bool is_android = false);
 
 // Decodes the given base64-encoded string, after removing any newlines,
 // which are required in some base64 standards. Returns true on success.

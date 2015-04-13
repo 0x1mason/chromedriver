@@ -29,6 +29,7 @@ KeyEvent CreateCharEvent(const std::string& unmodified_text,
 Status ConvertKeysToKeyEvents(const base::string16& keys,
                               bool release_modifiers,
                               int* modifiers,
-                              std::list<KeyEvent>* key_events);
+                              std::list<KeyEvent>* key_events,
+                              bool is_android = false);
 
 #endif  // CHROME_TEST_CHROMEDRIVER_KEY_CONVERTER_H_

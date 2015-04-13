@@ -39,7 +39,8 @@ Session::Session(const std::string& id)
       sticky_modifiers(0),
       mouse_position(0, 0),
       page_load_timeout(kDefaultPageLoadTimeout),
-      auto_reporting_enabled(false) {}
+      auto_reporting_enabled(false),
+      is_android_(false) {}
 
 Session::Session(const std::string& id, scoped_ptr<Chrome> chrome)
     : id(id),
@@ -50,9 +51,18 @@ Session::Session(const std::string& id, scoped_ptr<Chrome> chrome)
       sticky_modifiers(0),
       mouse_position(0, 0),
       page_load_timeout(kDefaultPageLoadTimeout),
-      auto_reporting_enabled(false) {}
+      auto_reporting_enabled(false),
+      is_android_(false) {}
 
 Session::~Session() {}
+
+bool Session::IsAndroid() const {
+  return is_android_;
+}
+
+void Session::SetIsAndroid(bool is_android) {
+  is_android_ = is_android;
+}
 
 Status Session::GetTargetWindow(WebView** web_view) {
   if (!chrome)

@@ -186,6 +186,7 @@ Status InitSessionHelper(
         Status(kUnknownError, "unable to discover open window in chrome");
   }
 
+  session->SetIsAndroid(capabilities.IsAndroid());
   session->window = web_view_ids.front();
   session->detach = capabilities.detach;
   session->force_devtools_screenshot = capabilities.force_devtools_screenshot;
